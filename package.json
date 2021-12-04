@@ -1,0 +1,35 @@
+{
+  "name": "node-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "NODE_ENV=test jest --watchAll --unhandled-rejections=strict --detectOpenHandles"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@alpacahq/alpaca-trade-api": "^2.10.0",
+    "@prisma/client": "^3.0.2",
+    "axios": "^0.21.4",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "google-news-scraper": "^1.0.7",
+    "moment": "^2.29.1",
+    "momentjs": "^2.0.0",
+    "redis": "^3.1.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.2",
+    "winston": "^3.3.3",
+    "xml-js": "^1.6.9",
+    "yahoo-finance-news": "^1.0.2"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "prisma": "^3.0.2",
+    "supertest": "^6.1.6"
+  }
+}

@@ -1,0 +1,59 @@
+const { AllNews } = require('./get-news');
+const { RedisDict } = require('./redis-dict');
+const { KEYWORD } = require('./constants');
+const logger = require('./logger');
+
+
+const getLastTimeAgo = async (dict, keyword) => {
+    const timeAgo = await dict.get(keyword);
+    if (timeAgo) {
+        // convert string iso to date   
+        const oneDate = new Date(timeAgo);
+        return oneDate;
+    }
+    const oneDate = new Date();
+    oneDate.setMinutes(oneDate.getMinutes() - 30);
+    return oneDate;
+}
+
+const main = async () => {
+    try {
+        logger.info('News gathering cycle - Start');
+        const keywordAgo = KEYWORD.REDIS_NEWS_AGO_KEYWORD;
+        const keyword = KEYWORD.REDIS_KEYWORD;
+        const dict = new RedisDict(keyword);
+        const timeAgo = await getLastTimeAgo(dict, keywordAgo);
+        const searchUntil = new Date();
+        const symbols = await dict.get('symbols');
+        const defaultSymbols = 'AAPL,MSFT,GOOG';
+        const news = AllNews.getInstance(symbols === null ? defaultSymbols : symbols, timeAgo);
+        const isGetNews = await news.run();
+        if (!isGetNews) {
+            await dict.set(keywordAgo, searchUntil.toISOString());
+        }
+        logger.info('News gathering cycle - End');
+    }
+    catch (e) {
+        logger.error(e);
+        logger.error(e.stack);
+    }
+}
+
+const SearchNews = () => {
+    main().then(() => {
+        console.log(' ====== done');
+    });
+}
+
+const intervalInMs = KEYWORD.READ_NEWS_INTERVAL_MS
+SearchNews();
+setInterval(SearchNews, intervalInMs);
+
+// const oneDate = new Date();
+// oneDate.setMinutes(oneDate.getMinutes() - 120);
+// const news = AllNews.getInstance("AAPL,MSFT,GOOG", oneDate);
+// news.run()
+//     .then(ok => {
+//         const sentiment = Sentiment.instance;
+//         sentiment.run().then(() => console.log('done'));
+//     });

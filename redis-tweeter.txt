@@ -1,0 +1,28 @@
+// localhost:8101/tweets
+
+class NewwFromTweeter {
+    constructor(symbols, timeAgo) {
+        this.symbols = symbols;
+        this.symbolEach = symbols.split(',');
+        this.timeAgo = timeAgo;
+        this.articles = [];
+    }
+
+    // Get news by multiple symbols
+    async GetTweets(symbol) {
+        try {
+            const url = KEYWORD.URL_TWEETS;
+            const result = await axios.post(url, { symbol: symbol, from_dt: this.timeAgo: } });
+
+        const promiseGetYahooFinaceNews = util.promisify(yahooFinanceNews.get);
+        const jsonData = await promiseGetYahooFinaceNews(symbols);
+    }
+    catch(str) {
+        try {
+            const data = JSON.parse(str);
+            this.yahooNews(data);
+        } catch (e) {
+            console.log('YAHOO NEWS ERROR: ', e);
+        }
+    }
+}
